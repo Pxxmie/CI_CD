@@ -1,3 +1,4 @@
+
 # Jenkins
 
 ## What is Jenkins? 
@@ -48,3 +49,13 @@ uname -a
 
 ![Alt text](images/build_now.png)
 
+2) The job will then show under Build history, if your commands have ran successfully it will show a blue circle, however if it has failed you will see a red circle. 
+   
+![Alt text](images/build.png)
+
+1) Finally you can right click on your job and press on console output to show the successful output or if it failed it will tell you the error on the output. 
+   
+![Alt text](images/output_consolee.png)
+
+
+![Alt text](images/output_message.png)
