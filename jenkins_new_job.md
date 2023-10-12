@@ -3,13 +3,10 @@
 
 ## What is Jenkins? 
 
-Jenkins is an open source automation server which offers a simple way to set up a continuous integration and continuous delivery environment.
+Jenkins is an open source automation tool used to build and test software projects. 
 <br>
 
-It is used to continually create and test software projects, making it easier for developers and DevOps engineers to integrate changes to the project. For example, if your team is working on a project, Jenkins will continually test your builds and alert you any mistakes early in the process.
-<br>
-
-Organisations may use Jenkins to automate and speed up the software development process.
+The tool makes it easier for developers to integrate changes to the project. Jenkins achieves continuous integration with the help of plugins. 
 
 
 ## Setting up a build job in Jenkins 

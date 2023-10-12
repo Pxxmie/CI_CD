@@ -23,13 +23,13 @@ CI/CD stands for Continuous Integration and Continuous Deployment/Delivery. It's
 
 - **Reduce risk on delivery** - Testing every change before it's deployed ensures that the result will be a higher quality product
 
-## CI/CD Pipeline - Jenkins 
+## Building CI/CD Pipeline with Jenkins
 
-A **CI/CD pipeline** is a set of automated steps that code goes through from development to deployment.
+A **CI/CD pipeline** is a set of automated steps that code goes through from development to deployment. The pipeline is responsible for building codes, running tests and deploying new software versions.
 
 ![Alt text](images/cicd_diagram2.png)
 
-From this diagram, I will explain the **Continuous integration** that has been implemented from local host to Jenkins and how we are going to set up a production environment CD from the CI/CD pipeline. 
+From this diagram, I will explain how **Continuous integration** has been implemented and how we are going to set up a production environment CD from the CI/CD pipeline. 
 
 ## Continious Integration (CI)
 
@@ -78,7 +78,7 @@ We created two jobs, in order to automate the process of merging and deploying c
 
    **Add Execute Command**
 
-   In the job configuration, add a build step to **Execute shell script on remote host using ssh**. This command will be used to SSH into the EC2 instances and perform further action: 
+   In the job configuration, add a build step to **Execute shell script**. This command will be used to SSH into the EC2 instances and perform further action: 
 
    ```
    sudo apt upgrade -y 
@@ -98,3 +98,29 @@ We created two jobs, in order to automate the process of merging and deploying c
 
 3. **SSH into EC2 from Local host**
    
+
+## Best Practices for CI/CD Pipeline:
+
+- **Version Control** - codes should be regularly merged to the branch using version control system such as git. 
+
+- **Isolation** - Ensure that the CI/CD pipeline is isolated from the production environment incase of accidental deployments. 
+
+- **Automatation** - Jenkins allows automation such automatically merging code changes. Automated tests that are triggered when you make changes. This reduces manual steps and more foucs on faster development cycle. 
+
+- **Documentation** - Documenting configuration, workflows - helps your team members as well as yourself for troubleshooting.
+
+## How to Approach a Task?
+
+1) **Understand** - Read and understand the requirements or tasks. Always ask questions if you are not sure!
+
+2) **Plan and Priortise** - Break down tasks into smaller tasks and priortise based on importance. 
+
+3) **Research** - Gather documentation , research on the internet.
+
+4) **Design** - Think about the best approach that outlines the architecture.
+   
+5) **Iterate and Implement** - Test each tasks before moving to next one. 
+
+6) **Test** - Test every change you have made, ensure it meets the requirements. Verify that the software works as expected.
+
+7) **Document** - Document everything, it will be useful for you and your team. 
