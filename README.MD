@@ -1,4 +1,4 @@
-## CI/CD
+## CI/CD - Continous Integration / Continious Delivery and Deployment
 
 ### What is CI/CD ?
 
@@ -23,25 +23,78 @@ CI/CD stands for Continuous Integration and Continuous Deployment/Delivery. It's
 
 - **Reduce risk on delivery** - Testing every change before it's deployed ensures that the result will be a higher quality product
 
-### What is a CI/CD pipeline? 
+## CI/CD Pipeline - Jenkins 
 
 A **CI/CD pipeline** is a set of automated steps that code goes through from development to deployment.
 
-![Alt text](images/cicd_diagram.png)
+![Alt text](images/cicd_diagram2.png)
 
-#### Explaning the diagram: 
+From this diagram, I will explain the **Continuous integration** that has been implemented from local host to Jenkins and how we are going to set up a production environment CD from the CI/CD pipeline. 
 
-**Local host**: This represents your own computer, where you are developing code, creating, managing local repositories and generating SSH key pairs. 
+## Continious Integration (CI)
 
-**GitHub**: You create your remote repository and create a secure connection using your public SSH key. Through this, you are then able to store and manage your repo and push and commit from your local repositories. 
+**Local host** : This represents our own computer, where we develop, change code, Initalise and manage local repositories. This is also where we generate our **SSH key pairs** which we will use to establish a secure connection on remote servers. 
+<br> 
 
-**Generate new SSH Key Pair**
+During this process of continous integration, it is good practice to always work in a Dev branch as this allows multiple developers to work at once without interfering with each other's changes.
 
-**Attach Public SSH Key to GitHub Repo:**
-Add the public SSH key to your GitHub repository. This allows Jenkins to access the repository securely.
 
-**Authenticate in Jenkins**: In Jenkins, add the private key to authenticate the connection. This private key links to the public key you attached to your GitHub repository.
+**GitHub** : Allows us to create our remote repository. We can push, commit our changes from local repo to remote repo through secure connection using our SSH key. 
+<br> 
 
-**Jenkins**: can pull the code from GitHub repo, build, run and test. 
+### Establishing a secure connection between GitHub and Jenkins
 
-**Webhook Trigger** :creates a notification system between GitHub and Jenkins. Whenever there is a new commit or changes to the GitHub repo it notifies and triggers Jenkins to initiate the pipeline, automating the integration and testing process.
+We have added the public SSH key to our GitHub repository. This allows Jenkins to access the repository securely.
+
+ In Jenkins, we add the private key in order to authenticate and establish a secure communication with GitHub. This private key links to the public key we attached to our GitHub repository.This allows Jenkins to  pull the code from GitHub repo, build, run and test. 
+
+### Automating CI
+
+**Webhook Trigger** 
+
+Webhook creats a notification system between GitHub and Jenkins. Whenever there is a new commit or changes made from our local host to our github repo, it notifies and triggers Jenkins to initiate the build. 
+
+### Creating and Merging Jobs in Jenkins 
+
+We created two jobs, in order to automate the process of merging and deploying code changes.
+
+- We make changes to the code locally and push them to the dev branch.
+
+- GitHub repository triggers a webhook, notifying Jenkins of the changes.
+
+- Our first job is executed and starts the build.
+  
+- If the build is successful, Jenkins triggers second job.
+  
+- Second job fetches the latest changes from the dev branch, merges them into the main branch, and pushes the changes back to the main repository.
+
+*Please refer to jenkins_merging_git_branches.md on how to create a new job in Jenkins.*
+
+## Setting up Production Environment (CD)
+
+1. **Create a new job in Jenkins** 
+   
+   This job should be triggered by the merge job we created and will be used to SSH into EC2.
+
+   **Add Execute Command**
+
+   In the job configuration, add a build step to **Execute shell script on remote host using ssh**. This command will be used to SSH into the EC2 instances and perform further action: 
+
+   ```
+   sudo apt upgrade -y 
+
+   cd app/app
+   npm install
+   ```
+
+
+2. **Create EC2 instance in AWS**
+   
+   One for the **app** and one for the **mongodb database**. We must remember to configure the security settings for the app instance so it allows connection to **port 8080 for Jenkins**. 
+
+   We need to add security rule for our database instance to **port 27017 for mongodb**.
+
+   *if using pre-configured AMI then nodejs must be installed.*
+
+3. **SSH into EC2 from Local host**
+   
