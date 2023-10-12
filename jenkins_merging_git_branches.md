@@ -1,5 +1,5 @@
-### Merging with git branches 
-Below, I will be showing you How Jenkin can merge code from Dev to our Main branch if the tests all pass. 
+### Merging code  with Git branches (Dev and Main)
+Below, I have created a guide to show how to merge code from the Dev branch to our Main branch on Jenkins, provided that all tests pass.
 
 
 1) In order to switch to Dev branch - you need to go to your gitbash terminal sand run the following command: 
@@ -41,7 +41,7 @@ After I have made some changes to my local repo and pushed to the dev branch, it
 
 ![Alt text](images/ci.png)
 
-then if the test has all passed on my first job, it will start the build on my merge job, which will also merge my code and changes from dev to main. Then it will push it out to the main branch. After this has been successful, it should show a blue circle next to your job as well as a sucessful console output. 
+If the test has all passed on my first job, it will start the build on my merge job, which will also merge my code and changes from dev to main. Then it will push it out to the main branch. After this has been successful, it should show a blue circle next to your job as well as a sucessful console output. 
 
 ![Alt text](images/merge.png)
 
