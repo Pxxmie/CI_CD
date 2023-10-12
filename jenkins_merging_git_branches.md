@@ -29,8 +29,21 @@ I have entered **origin**, as it indicates the default remote associated with th
 
 ![Alt text](images/post_build_actions_merge.png)
 
-## Post build Action on first job 
+### Post build Action on first job 
 
 1) Now I go back to my first job which, where it handles my dev code. Under post build action, I will specifiy that if the tests passes on this job, then to trigger and start building my merge job which handles mergining my dev to main. I have made sure to select **Trigger only if build is stable** so it doesnt start building the other job until it passses the test. 
    
 ![Alt text](images/post_build_dev.png)
+
+### Testing
+
+After I have made some changes to my local repo and pushed to the dev branch, it should automatically trigger my first job to notify that I have made some changes. 
+
+![Alt text](images/ci.png)
+
+then if the test has all passed on my first job, it will start the build on my merge job, which will also merge my code and changes from dev to main. Then it will push it out to the main branch. After this has been successful, it should show a blue circle next to your job as well as a sucessful console output. 
+
+![Alt text](images/merge.png)
+
+
+![Alt text](images/console_output.png)
