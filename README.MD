@@ -103,7 +103,7 @@ We do this by adding a shell script.
     In the job configuration of third job, add a build step to **Execute shell script**.
 
      ```bash
-      #synchronise files between your local machine and a remote server using SSH.
+    #synchronise files between your local machine and a remote server using SSH.
     rsync -avz -e "ssh -o StrictHostKeyChecking=no" app ubuntu@3.252.147.182:/home/ubuntu/
 
     #ssh into your EC2 instance 
@@ -156,8 +156,14 @@ Now that our nginx server is running, we want to copy our code and deploy the ap
     ```
 
 - Testing 
+
+  The build was succesful and from the console output we can see that:
+   - Jenkins is initiating the process of creating a local copy of the Git repository. It's using the URL git@github.com:Pxxmie/AWS_and_Cloud_Computing.git to identify the repository.
+   - Initialising a new local Git repository in the directory /home/ubuntu/workspace/prismika-app  
+   - pulling changes from the remote repository, tt's using git fetch to retrieve the latest commits from the repository.
+  ![Alt text](images/console_output_app.png)
   
-  ![Alt text](images/test_app.png)
+      ![Alt text](images/test_app.png)
 
 ### **SSH into EC2 from Local host**
 After creating our App and Database instance, we need to SSH into it from our local machine, to properly test and set it up. We do this through our Gitbash terminal. 
