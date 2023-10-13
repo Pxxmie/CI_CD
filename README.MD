@@ -65,31 +65,113 @@ We created two jobs, in order to automate the process of merging and deploying c
 
 ## Setting up Production Environment (CD)
 
-1. **Create a new job in Jenkins**
+### **Create a new job in Jenkins**
+  - First, we need to create a new job in Jenkins. *i.e Prismika-CD*
+  - This is our third job, this job should be triggered by the merge job. So we need to add post-build actions on our merge job to tell our third job to build upon successfully passing all test.
+  - Need to enable '**SSH agent**' and select our 'tech254.pem' file in order to establish a secure connection with AWS.
 
-   This job should be triggered by the merge job we created and will be used to SSH into EC2.
+### **Create App and Database EC2 instance in AWS**
 
-   **Add Execute Command**
+- Log into your AWS account and Launch new Instance. 
+  
+-  Setting up Database Instance
+    - Select **18.04 lts 1e9** for AMI if you are not using your own.
+    - Security inbound rule - allow port **SSH and Mongodb**
+    - SSH key pair - Tech254
 
-   In the job configuration, add a build step to **Execute shell script**. This command will be used to SSH into the EC2 instances and perform further action:
+-  Setting up App Instance
+    - Select **18.04 lts le9** or **20.04 LTS** for AMI if you are not using your own. 
+     ![Alt text](images/AMI_CD.png)
+    - Configure Security group - allow port **SSH, HTTP, 8080 (Jenkins)**
+    ![Alt text](images/sg_jenkins_app.png)
+    - SSH key pair - Select Tech254
+  
 
-   ```bash
-   sudo apt upgrade -y 
+### **SSH into EC2 from Local host**
+After creating our App and Database instance, we need to SSH into it from our local machine, to properly test and set it up. We do this through our Gitbash terminal. 
 
-   cd app/app
-   install node.js
-   npm install
+
+- App Instance
+  - SSH into our databse through out terminal. 
+  - copy code (app folder) - `git clone https://github.com/Pxxmie/AWS_and_Cloud_Computing.git`
+  - `sudo nano app_provision.sh` to create a script to run and install nginx server and install node. 
+  
+      ```bash
+         #!/bin/bash
+
+         # update
+         sudo apt update
+
+         # upgrade
+         sudo apt upgrade -y
+
+         # install nginx
+         sudo apt install nginx -y
+
+         # restart nginx
+         sudo systemctl restart nginx
+
+         # enable nginx
+         sudo systemctl enable nginx
+
+         # install Node.js and npm
+         curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+         sudo apt install nodejs -y
+
+         # check Node.js version
+         node -v
+
+         # install pm2 globally
+         sudo npm install pm2 -g
+
+         # install project dependencies
+         npm install
+
+         # Start the Node.js application
+         node app.js
+      ```
+- Database Instance 
+   - SSH into our database through our terminal. 
+   - If we are not using our pre-configured AMI, then we need to run a script that we have created to install mongodb. 
+   - `sudo nano provision2.sh` and enter your script:
+  
+   ```
+   sudo apt update 
+
+   sudo apt upgrade -y
+
+   wget -qO - https://www.mongodb.org/static/pgp/server-3.2.asc | sudo apt-key add -
+
+   echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+
+   sudo apt update
+
+   sudo apt-get install -y mongodb-org=3.2.20 mongodb-org-server=3.2.20 mongodb-org-shell=3.2.20 mongodb-org-mongos=3.2.20 mongodb-org-tools=3.2.20
+
+   sudo nano /etc/mongod.conf
+
+   sudo systemctl start mongod
+
+   sudo systemctl enable mongod
+
+   sudo systemctl status mongod
    ```
 
-2. **Create EC2 instance in AWS**
+  ### Go back to Jenkins Job 
 
-   One for the **app** and one for the **mongodb database**. We must remember to configure the security settings for the app instance so it allows connection to **port 8080 for Jenkins**.
+  - **Add Execute Command**
 
-   We need to add security rule for our database instance to **port 27017 for mongodb**.
+    In the job configuration, add a build step to **Execute shell script**.
 
-   *if using pre-configured AMI then nodejs must be installed.*
-
-3. **SSH into EC2 from Local host**
+     ```bash
+      ssh -o "StrictHostKeyChecking=no" ubuntu@ec2-3-252-147-182.eu-west-1.compute.amazonaws.com <<EOF
+      sudo apt-get update -y
+      sudo apt-get upgrade -y
+      sudo apt-get install nginx -y
+      sudo systemctl restart nginx
+      sudo systemctl enable nginx
+     ```
+    *if youre not using pre-configured AMI then nodejs must be installed.*
 
 ## Best Practices for CI/CD Pipeline
 
