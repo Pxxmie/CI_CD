@@ -1,6 +1,5 @@
-## CI/CD - Continous Integration / Continious Delivery and Deployment
+# CI/CD - Continuous Integration / Continious Delivery and Deployment
 
-### What is CI/CD ?
 
 CI/CD stands for Continuous Integration and Continuous Deployment/Delivery. It's a set of practices and principles that aim to improve the software development process by automating various stages.
 
@@ -12,9 +11,9 @@ CI/CD stands for Continuous Integration and Continuous Deployment/Delivery. It's
 
 **Key Points**:
 
-- **CI** stands for **Continious Integration**.
+- **CI** stands for **Continuous Integration**.
   
-- **CD** stands for **Continious Deployment/Delivery**.
+- **CD** stands for **Continuous Deployment/Delivery**.
   
 - CI/CD falls under **DevOps** and combines the practices of continuous integration and continuous delivery.
 
@@ -35,8 +34,6 @@ From this diagram, I will explain how **Continuous integration** has been implem
 ## Continuous Integration (CI)
 
 **Local host** : This represents our own computer, where we develop, change code, Initialise and manage local repositories. This is also where we generate our **SSH key pairs** which we will use to establish a secure connection on remote servers.
-<br>
-
 During this process of continuous integration, it is good practice to always work in a Dev branch as this allows multiple developers to work at once without interfering with each other's changes.
 
 **GitHub** : Allows us to create our remote repository. We can push, commit our changes from local repo to remote repo through secure connection using our SSH key.
@@ -44,15 +41,11 @@ During this process of continuous integration, it is good practice to always wor
 
 ### Establishing a secure connection between GitHub and Jenkins
 
-We have added the public SSH key to our GitHub repository. This allows Jenkins to access the repository securely.
-
- In Jenkins, we add the private key in order to authenticate and establish a secure communication with GitHub. This private key links to the public key we attached to our GitHub repository. This allows Jenkins to  pull the code from GitHub repo, build, run and test.
+We have added the public SSH key to our GitHub repository. This allows Jenkins to access the repository securely. In Jenkins, we add the private key in order to authenticate and establish a secure communication with GitHub. This private key links to the public key we attached to our GitHub repository. This allows Jenkins to  pull the code from GitHub repo, build, run and test.
 
 ### Automating CI
 
-**Webhook Trigger**
-
-Webhook creates a notification system between GitHub and Jenkins. Whenever there is a new commit or changes made from our local host to our github repo, it notifies and triggers Jenkins to initiate the build.
+**Webhook Trigger** - Webhook creates a notification system between GitHub and Jenkins. Whenever there is a new commit or changes made from our local host to our github repo, it notifies and triggers Jenkins to initiate the build.
 
 ### Creating and Merging Jobs in Jenkins
 
@@ -80,7 +73,7 @@ We created two jobs, in order to automate the process of merging and deploying c
 
    In the job configuration, add a build step to **Execute shell script**. This command will be used to SSH into the EC2 instances and perform further action:
 
-   ```
+   ```bash
    sudo apt upgrade -y 
 
    cd app/app
