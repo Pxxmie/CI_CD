@@ -161,7 +161,8 @@ Now that our nginx server is running, we want to copy our code and deploy the ap
    - Jenkins is initiating the process of creating a local copy of the Git repository. It's using the URL git@github.com:Pxxmie/AWS_and_Cloud_Computing.git to identify the repository.
    - Initialising a new local Git repository in the directory /home/ubuntu/workspace/prismika-app  
    - pulling changes from the remote repository, tt's using git fetch to retrieve the latest commits from the repository.
-  ![Alt text](images/console_output_app.png)
+  
+      ![Alt text](images/console_output_app.png)
   
       ![Alt text](images/test_app.png)
 
