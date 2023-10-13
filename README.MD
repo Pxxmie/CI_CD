@@ -83,9 +83,33 @@ We created two jobs, in order to automate the process of merging and deploying c
     - Select **18.04 lts le9** or **20.04 LTS** for AMI if you are not using your own. 
      ![Alt text](images/AMI_CD.png)
     - Configure Security group - allow port **SSH, HTTP, 8080 (Jenkins)**
-    ![Alt text](images/sg_jenkins_app.png)
     - SSH key pair - Select Tech254
   
+### Go back to Jenkins Job 
+
+  - **Add Execute Command**
+
+    In the job configuration of third job, add a build step to **Execute shell script**.
+
+     ```bash
+      #  synchronise files between your local machine and a remote server using SSH.
+    rsync -avz -e "ssh -o StrictHostKeyChecking=no" app ubuntu@3.252.147.182:/home/ubuntu/
+
+    ssh -o "StrictHostKeyChecking=no" ubuntu@ec2-3-252-147-182.eu-west-1.compute.amazonaws.com <<EOF
+    sudo apt-get update -y
+    sudo apt-get upgrade -y
+    sudo apt-get install nginx -y
+    sudo systemctl restart nginx
+    sudo systemctl enable nginx
+
+    EOF
+     ```
+
+    *if youre not using pre-configured AMI then nodejs must be installed.*
+
+
+
+
 
 ### **SSH into EC2 from Local host**
 After creating our App and Database instance, we need to SSH into it from our local machine, to properly test and set it up. We do this through our Gitbash terminal. 
@@ -157,21 +181,6 @@ After creating our App and Database instance, we need to SSH into it from our lo
    sudo systemctl status mongod
    ```
 
-  ### Go back to Jenkins Job 
-
-  - **Add Execute Command**
-
-    In the job configuration, add a build step to **Execute shell script**.
-
-     ```bash
-      ssh -o "StrictHostKeyChecking=no" ubuntu@ec2-3-252-147-182.eu-west-1.compute.amazonaws.com <<EOF
-      sudo apt-get update -y
-      sudo apt-get upgrade -y
-      sudo apt-get install nginx -y
-      sudo systemctl restart nginx
-      sudo systemctl enable nginx
-     ```
-    *if youre not using pre-configured AMI then nodejs must be installed.*
 
 ## Best Practices for CI/CD Pipeline
 
