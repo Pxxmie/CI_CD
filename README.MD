@@ -68,7 +68,16 @@ We created two jobs, in order to automate the process of merging and deploying c
 ### **Create a new job in Jenkins**
   - First, we need to create a new job in Jenkins. *i.e Prismika-CD*
   - This is our third job, this job should be triggered by the merge job. So we need to add post-build actions on our merge job to tell our third job to build upon successfully passing all test.
-  - Need to enable '**SSH agent**' and select our 'tech254.pem' file in order to establish a secure connection with AWS.
+  
+- Configure settings 
+  
+  - Link your github project URL 
+  - Under office 365 connector - make sure you have **restrict where this project can be run** enabled (sparta-ubuntu-node).
+  - Under Source code management- have your github repo ssh url linked followed by your ssh key > branch specifier needs to be **main**.
+  - Under Build Envrionment enable '**SSH agent**' and select our 'tech254.pem' file in order to establish a secure connection with AWS.
+  - Click save and go back to your Jenkins dashboard. 
+
+- Go into your second Jenkins job (prismika-merge) add a post build action to build the third job upon successfully passing the test. 
 
 ### **Create App and Database EC2 instance in AWS**
 
@@ -85,19 +94,24 @@ We created two jobs, in order to automate the process of merging and deploying c
     - Configure Security group - allow port **SSH, HTTP, 8080 (Jenkins)**
     - SSH key pair - Select Tech254
   
-### Go back to Jenkins Job 
 
+ ### Step 1 : Sync Files and Configure Nginx on EC2
+Now we are going to allow Jenkins to ssh into our Ec2 instance and automatically configure our Nginx server. 
+We do this by adding a shell script.
   - **Add Execute Command**
 
     In the job configuration of third job, add a build step to **Execute shell script**.
 
      ```bash
-      #  synchronise files between your local machine and a remote server using SSH.
+      #synchronise files between your local machine and a remote server using SSH.
     rsync -avz -e "ssh -o StrictHostKeyChecking=no" app ubuntu@3.252.147.182:/home/ubuntu/
 
-    ssh -o "StrictHostKeyChecking=no" ubuntu@ec2-3-252-147-182.eu-west-1.compute.amazonaws.com <<EOF
+    #ssh into your EC2 instance 
+    ssh -A -o "StrictHostKeyChecking=no" ubuntu@ec2-3-252-147-182.eu-west-1.compute.amazonaws.com <<EOF
     sudo apt-get update -y
     sudo apt-get upgrade -y
+
+    #install nginx 
     sudo apt-get install nginx -y
     sudo systemctl restart nginx
     sudo systemctl enable nginx
@@ -107,9 +121,43 @@ We created two jobs, in order to automate the process of merging and deploying c
 
     *if youre not using pre-configured AMI then nodejs must be installed.*
 
+- Testing 
+ ![Alt text](images/test_nginxserver.png)
 
+### Step 2: Node.js App Deployment
 
+Now that our nginx server is running, we want to copy our code and deploy the app. 
 
+1. Create another Jenkins job i.e "prismika-app"
+2. Under office 365 connector - make sure you have restrict where this project can be run enabled (sparta-ubuntu-node).
+3. Under Build Envrionment enable 'SSH agent' and select our 'tech254.pem' file in order to establish a secure connection with AWS.
+4. Click save and go back to your Jenkins dashboard.
+
+    ```bash
+    ssh -A -o "StrictHostKeyChecking=no" ubuntu@3.252.147.182 <<EOF
+
+      # install Node.js and npm
+    curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+    sudo apt install nodejs -y
+
+    # install pm2 globally
+    sudo npm install pm2 -g
+
+    cd app/app
+
+    # install project dependencies
+    npm install
+
+    # Start the Node.js application
+    pm2 start  app.js
+
+    pm2 restart app.js
+
+    ```
+
+- Testing 
+  
+  ![Alt text](images/test_app.png)
 
 ### **SSH into EC2 from Local host**
 After creating our App and Database instance, we need to SSH into it from our local machine, to properly test and set it up. We do this through our Gitbash terminal. 
