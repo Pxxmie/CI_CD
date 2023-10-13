@@ -77,6 +77,7 @@ We created two jobs, in order to automate the process of merging and deploying c
    sudo apt upgrade -y 
 
    cd app/app
+   install node.js
    npm install
    ```
 
