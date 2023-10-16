@@ -44,7 +44,7 @@ Below, I have created a guide to show how to merge code from the Dev branch to o
 
    ![Alt text](images/build_post_build_actions.png)
 
-### Creating Second Job - Merge to Main
+### Creating Second Job - Merge Dev to Main
 
 1) Follow same steps as above to create new job, give it suitable name ie *prismika-merge* followed by clicking on freestyle project. Then scroll down to source code management, click on **add additional behaviour** and select **merge before build**. This allows jenkins to merge dev branch to main. 
 
@@ -54,8 +54,8 @@ Below, I have created a guide to show how to merge code from the Dev branch to o
 
    ![Alt text](images/sshagent.png)
 
-3) Finally, on post build actions, we need to select **Git publisher** from the drop down. Click on **push only if build succeeds** folowed by **merge results**.
-Click on add tag on Branches and enter main for branch to push and origion for target remote name.
+3) Finally, on post build actions, we need to select **Git publisher** from the drop down. Click on **push only if build succeeds** folowed by **merge results**. This step allows Jenkins to interact with our Git repository and it ensures that the code will only be pushed to the repository if the build is successful. By clicking on Merge Results it confirms that the merge operation was successful.
+
    ![Alt text](images/git_publisher.png)
 
    
@@ -63,7 +63,7 @@ Click on add tag on Branches and enter main for branch to push and origion for t
 
 After I have made some changes to my local repo and pushed to the dev branch, it should automatically trigger my first job to notify that I have made some changes. 
 
-![Alt text](images/ci.png)
+   ![Alt text](images/ci.png)
 
 If the test has all passed on my first job, it will start the build on my merge job, which will also merge my code and changes from dev to main. Then it will push it out to the main branch. After this has been successful, it should show a blue circle next to your job as well as a sucessful console output. 
 
